@@ -1,8 +1,8 @@
 #include "TcpServer.h"
 
-TcpServer::TcpServer(const std::string &ip,const uint16_t port,int threadnum)
-                 :threadnum_(threadnum),mainloop_(new EventLoop(true)), 
-                  acceptor_(mainloop_.get(),ip,port),threadpool_(threadnum_,"IO")
+TcpServer::TcpServer(const std::string &ip, const uint16_t port, int threadnum, uint16_t sep , const string &sepstr)
+    : threadnum_(threadnum), mainloop_(new EventLoop(true)),
+      acceptor_(mainloop_.get(), ip, port), threadpool_(threadnum_, "IO")
 {
     // 设置epoll_wait()超时的回调函数。
     mainloop_->setepolltimeoutcallback(std::bind(&TcpServer::epolltimeout,this,std::placeholders::_1));   

@@ -27,7 +27,7 @@ private:
     std::function<void(spConnection)> sendcompletecb_;                    // 回调EchoServer::HandleSendComplete()。
     std::function<void(EventLoop *)> timeoutcb_;                          // 回调EchoServer::HandleTimeOut()。
 public:
-    TcpServer(const std::string &ip, const uint16_t port, int threadnum = 3);
+    TcpServer(const std::string &ip, const uint16_t port, int threadnum = 3, uint16_t sep = 0, const string &sepstr = "");
     ~TcpServer();
 
     void start(); // 运行事件循环。

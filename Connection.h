@@ -32,7 +32,7 @@ private:
     Timestamp lastatime_;                                                // 时间戳，创建Connection对象时为当前时间，每接收到一个报文，把时间戳更新为当前时间。
 
 public:
-    Connection(EventLoop *loop, std::unique_ptr<Socket> clientsock);
+    Connection(EventLoop *loop, std::unique_ptr<Socket> clientsock, uint16_t sep = 0, const string &sepstr = "");
     ~Connection();
 
     int fd() const;         // 返回客户端的fd。

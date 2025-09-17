@@ -8,12 +8,14 @@ class Buffer
 private:
     std::string buf_;    // 用于存放数据。
     const uint16_t sep_; // 报文的分隔符：0-无分隔符(固定长度、视频会议)；1-四字节的报头；2-"\r\n\r\n"分隔符（http协议）。
+    const string& sepstr_;//指定分隔符。
 
 public:
-    Buffer(uint16_t sep = 0);
+    Buffer(uint16_t sep = 0, const string& sepstr="");
     ~Buffer();
 
-    void append(const char *data, size_t size);        // 把数据追加到buf_中。
+    void setsep(uint16_t sep = 0, const string &sepstr = "");//设置sep和sepstr。
+     void append(const char *data, size_t size); // 把数据追加到buf_中。
     void appendwithsep(const char *data, size_t size); // 把数据追加到buf_中，附加报文分隔符。
     void erase(size_t pos, size_t nn);                 // 从buf_的pos开始，删除nn个字节，pos从0开始。
     size_t size();                                     // 返回buf_的大小。

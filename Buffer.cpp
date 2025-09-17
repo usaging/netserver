@@ -1,6 +1,6 @@
 #include "Buffer.h"
 
-Buffer::Buffer(uint16_t sep) : sep_(sep)
+Buffer::Buffer(uint16_t sep, const string& sepstr) : sep_(sep),sepstr_(sepstr)
 {
 }
 
@@ -8,8 +8,14 @@ Buffer::~Buffer()
 {
 }
 
-// 把数据追加到buf_中。
-void Buffer::append(const char *data, size_t size)
+void Buffer::setsep(uint16_t sep, const string &sepstr)
+{
+    sep_=sep;
+    sepstr_=sepstr;
+}
+
+    // 把数据追加到buf_中。
+    void Buffer::append(const char *data, size_t size)
 {
     buf_.append(data, size);
 }
@@ -26,11 +32,12 @@ void Buffer::appendwithsep(const char *data, size_t size)
         buf_.append((char *)&size, 4); // 处理报文长度（头部）。
         buf_.append(data, size);       // 处理报文内容。
     }
-    else if(sep_ ==2)
+    else if (sep_ == 2)
     {
-
+        buf_.append(data, size);
+        // 添加自定义分隔符
+        buf_.append(sepstr_);
     }
-
 }
 
 // 从buf_的pos开始，删除nn个字节，pos从0开始。
@@ -79,7 +86,18 @@ bool Buffer::pickmessage(std::string &ss)
         ss = buf_.substr(4, len); // 从buf_中获取一个报文。
         buf_.erase(0, len + 4);   // 从buf_中删除刚才已获取的报文。
     }
-    else if (sep_ ==2)
+    else if (sep_ == 2)
+    {
+        // 查找分隔符
+        size_t pos = buf_.find(sepstr_);
+        if (pos == std::string::npos)
+            return false;
 
-        return true;
+        // 提取分隔符之前的内容
+        ss = buf_.substr(0, pos);
+
+        // 删除已处理的数据（包括分隔符）
+        buf_.erase(0, pos + sepstr_.size());
+    }
+    return true;
 }
